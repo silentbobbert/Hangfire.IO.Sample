@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Hang Fire</h1>
+    <p class="lead">Click here to see Hang Fire monitor</p>
+    <p><a href="~/hangfire" class="btn btn-primary btn-lg">Go To Queue &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Hang Fire</h2>
+        <p>Queue up a task</p>
+        @Html.ActionLink("Queue", "Queue",null, new {@class = "btn btn-default"})
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Declare a proxy to reference the hub. 
+        var notifier = $.connection.notificationHub;
+        notifier.IsStarted = false;
+
+        notifier.client.notify = function (message) {
+            console.log(message);
+        };
+
+        // Start the connection.
+        $.connection.hub.start().done(function () {
+            console.log("Signal R Started");
+            notifier.IsStarted = true;
+        });
+    });
+</script>
