@@ -1,4 +1,5 @@
 ﻿using Hangfire.IO.Sample.BusinessLogic;
+using Hangfire.IO.Sample.Models;
 using System;
 using System.Web.Mvc;
 
@@ -25,10 +26,10 @@ namespace Hangfire.IO.Sample.Controllers
 
             return View();
         }
-
-        public ActionResult Queue()
+        [HttpPost]
+        public ActionResult Queue(QueueItemModel model)
         {
-            BackgroundJob.Enqueue<Worker>(w => w.DoWork(DateTime.Now));
+            BackgroundJob.Enqueue<Worker>(w => w.DoWork(DateTime.Now, model.NumberOfItems));
 
             return RedirectToAction("Index");
         }

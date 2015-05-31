@@ -1,4 +1,6 @@
-﻿@{
+﻿@using System.Globalization
+@model Hangfire.IO.Sample.Models.QueueItemModel
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -12,12 +14,19 @@
     <div class="col-md-6">
         <h2>Hang Fire</h2>
         <p>Queue up a task</p>
-        @Html.ActionLink("Queue", "Queue",null, new {@class = "btn btn-default"})
+        @using (Html.BeginForm("Queue", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div>
+                Number of Items
+                @Html.EditorFor(m => m.NumberOfItems)
+            </div>
+            <input type="submit" class="btn btn-default" value="Queue">
+        }
     </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        // Declare a proxy to reference the hub. 
+        // Declare a proxy to reference the hub.
         var notifier = $.connection.notificationHub;
         notifier.IsStarted = false;
 
