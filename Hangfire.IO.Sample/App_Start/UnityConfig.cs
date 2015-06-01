@@ -1,6 +1,7 @@
 using Hangfire.Sample.Repository.EF;
 using Hangfire.Sample.Repository.Identity;
 using log4net;
+using log4net.Config;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
@@ -43,8 +44,10 @@ namespace Hangfire.IO.Sample
             // TODO: Register your types here
             // container.RegisterType<IProductRepository, ProductRepository>();
 
+            XmlConfigurator.Configure();
             var log = LogManager.GetLogger("Application");
             container.RegisterType<ILog>().RegisterInstance(log);
+            log.Info("Application Starting.");
 
             container.RegisterType<ApplicationDbContext>(new PerThreadLifetimeManager());
 

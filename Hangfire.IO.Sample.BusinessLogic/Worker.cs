@@ -1,4 +1,6 @@
 ﻿using Hangfire.IO.Sample.BusinessLogic.Hubs;
+using log4net;
+using log4net.Config;
 using ParallelProcessing.BusinessLogic;
 using System;
 using System.Diagnostics;
@@ -7,6 +9,13 @@ namespace Hangfire.IO.Sample.BusinessLogic
 {
     public class Worker
     {
+        private ILog Log { get; set; }
+
+        public Worker()
+        {
+            XmlConfigurator.Configure();
+            Log = LogManager.GetLogger("Application");
+        }
         public void DoWork(DateTime queuedAtDateTime, int numberOfItems)
         {
             var s = new Stopwatch();
@@ -27,6 +36,7 @@ namespace Hangfire.IO.Sample.BusinessLogic
             );
             NotificationHub.Instance.Notify(message);
             Debug.WriteLine(message);
+            Log.Info(message);
         }
     }
 }
