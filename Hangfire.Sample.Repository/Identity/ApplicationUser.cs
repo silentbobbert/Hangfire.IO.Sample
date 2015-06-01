@@ -1,5 +1,4 @@
-﻿using Hangfire.Sample.Repository.EF;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Security.Claims;

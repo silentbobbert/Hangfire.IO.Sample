@@ -1,58 +1,43 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ParallelProcessing.BusinessLogic
 {
     public class Processor
     {
-        private readonly int _numberOfItems;
-        private readonly ConcurrentDictionary<int, string> _processedItems;
-
-        public Processor(int numberOfItems)
+        private static bool IsPrime(uint n)
         {
-            _processedItems = new ConcurrentDictionary<int, string>();
-            _numberOfItems = numberOfItems;
-        }
-
-        public void DoWorkInParallel()
-        {
-            _processedItems.Clear();
-            IProcessItems processor = new ParallelItemProcessor();
-
-            ConcurrentDictionary<int, string> items;
-
-            BuildItems(out items);
-
-            Parallel.ForEach(items, (itm) => processor.QueueItem(itm, CallBackAction));
-            processor.ProcessItems();
-        }
-        public void DoWork()
-        {
-            _processedItems.Clear();
-
-            ConcurrentDictionary<int, string> items;
-            BuildItems(out items);
-
-            IProcessItems processor = new SerialItemProcessor();
-            foreach (var item in items)
+            if (n % 2 == 0 && n != 2) return false;
+            var root = (uint)Math.Ceiling(Math.Sqrt(n));
+            for (uint i = 3; i <= root; i += 2)
             {
-                processor.QueueItem(item, CallBackAction);
+                if (n % i == 0 && n != i) return false;
             }
-            processor.ProcessItems();
+            return true;
         }
-        private void BuildItems(out ConcurrentDictionary<int, string> items)
+        public List<uint> AllPrimesParallelAggregated(uint from, uint to)
         {
-            var numbers = Enumerable.Range(1, _numberOfItems);
+            var result = new List<uint>();
 
-            items = new ConcurrentDictionary<int, string>(numbers.Select(n => new KeyValuePair<int, string>(n, string.Format("Cool data: {0}", n))));
-        }
-        private void CallBackAction(string message, KeyValuePair<int, string> item)
-        {
-            _processedItems.TryAdd(item.Key, item.Value);
-            Debug.WriteLine(message);
+            Parallel.For((int)from, (int)to,
+                () => new List<uint>(), // Local state initializer
+                (i, pls, local) =>      // Loop body
+                {
+                    if (IsPrime((uint)i))
+                    {
+                        local.Add((uint)i);
+                    }
+                    return local;
+                },
+                local =>                // Local to global state combiner
+                {
+                    lock (result)
+                    {
+                        result.AddRange(local);
+                    }
+                });
+            return result;
         }
     }
 }

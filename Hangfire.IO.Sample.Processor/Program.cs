@@ -1,5 +1,4 @@
-﻿using log4net.Config;
-using Microsoft.AspNet.SignalR;
+﻿using Microsoft.AspNet.SignalR;
 using System;
 
 namespace Hangfire.IO.Sample.Processor

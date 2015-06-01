@@ -1,4 +1,5 @@
-﻿using Hangfire.IO.Sample.BusinessLogic.Hubs;
+﻿using Hangfire.IO.Sample.BusinessLogic.Annotations;
+using Hangfire.IO.Sample.BusinessLogic.Hubs;
 using log4net;
 using log4net.Config;
 using ParallelProcessing.BusinessLogic;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 
 namespace Hangfire.IO.Sample.BusinessLogic
 {
+    [UsedImplicitly]
     public class Worker
     {
         private ILog Log { get; set; }
@@ -16,23 +18,25 @@ namespace Hangfire.IO.Sample.BusinessLogic
             XmlConfigurator.Configure();
             Log = LogManager.GetLogger("Application");
         }
-        public void DoWork(DateTime queuedAtDateTime, int numberOfItems)
+        public void DoWork(DateTime queuedAtDateTime, uint upperLimit)
         {
             var s = new Stopwatch();
             s.Start();
 
-            var processor = new Processor(numberOfItems);
-            processor.DoWorkInParallel();
+            var processor = new Processor();
+            var results = processor.AllPrimesParallelAggregated(0, upperLimit);
 
             s.Stop();
 
             var message = string.Format("This Job was queued at {0} and then Processed at {1}. " +
                                         "The task took {2}ms. " +
-                                        "The number of items processed was {3}", 
+                                        "The number of primes found was {3}. " +
+                                        "The upper limit was {4}", 
                 queuedAtDateTime, 
                 DateTime.Now,
                 s.ElapsedMilliseconds,
-                numberOfItems
+                results.Count,
+                upperLimit
             );
             NotificationHub.Instance.Notify(message);
             Debug.WriteLine(message);

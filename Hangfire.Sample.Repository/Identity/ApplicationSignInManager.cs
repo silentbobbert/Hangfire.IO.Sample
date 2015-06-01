@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Security.Claims;

@@ -1,11 +1,9 @@
 using System.Linq;
-using System.Security.Claims;
 using Hangfire.Sample.Repository.EF;
 using Hangfire.Sample.Repository.Identity;
 using System;
 using System.Data.Entity.Migrations;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Hangfire.Sample.Repository.Migrations
 {
