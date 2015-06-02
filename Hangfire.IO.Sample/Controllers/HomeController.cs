@@ -29,7 +29,7 @@ namespace Hangfire.IO.Sample.Controllers
         [HttpPost]
         public ActionResult Queue(QueueItemModel model)
         {
-            BackgroundJob.Enqueue<Worker>(w => w.DoWork(DateTime.Now, (uint)Math.Abs(model.MaxToSearchLimit)));
+            BackgroundJob.Enqueue<IWorker>(w => w.DoWork(DateTime.Now, (uint)Math.Abs(model.MaxToSearchLimit)));
 
             return RedirectToAction("Index");
         }

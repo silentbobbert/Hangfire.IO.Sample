@@ -9,15 +9,15 @@ using System.Diagnostics;
 namespace Hangfire.IO.Sample.BusinessLogic
 {
     [UsedImplicitly]
-    public class Worker
+    public class Worker : IWorker
     {
         private ILog Log { get; set; }
 
-        public Worker()
+        public Worker(ILog log)
         {
-            XmlConfigurator.Configure();
-            Log = LogManager.GetLogger("Application");
+            Log = log;
         }
+
         public void DoWork(DateTime queuedAtDateTime, uint upperLimit)
         {
             var s = new Stopwatch();

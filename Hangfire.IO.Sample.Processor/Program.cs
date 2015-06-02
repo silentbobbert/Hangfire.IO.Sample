@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using Hangfire.IO.Sample.BusinessLogic.IoC;
+using Hangfire.Unity;
+using Microsoft.AspNet.SignalR;
 using System;
+using Microsoft.Practices.Unity;
 
 namespace Hangfire.IO.Sample.Processor
 {
@@ -8,6 +11,7 @@ namespace Hangfire.IO.Sample.Processor
         static void Main(string[] args)
         {
             GlobalConfiguration.Configuration.UseSqlServerStorage("DefaultConnection");
+            GlobalConfiguration.Configuration.UseActivator(new UnityJobActivator(UnityConfig.GetConfiguredContainer() as UnityContainer));
 
             GlobalHost.DependencyResolver.UseRedis("localhost", 6379, null, "HangfireSample");
 

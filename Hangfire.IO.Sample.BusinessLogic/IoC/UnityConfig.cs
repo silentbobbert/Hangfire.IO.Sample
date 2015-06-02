@@ -1,15 +1,10 @@
-using Hangfire.IO.Sample.BusinessLogic;
+using System;
 using Hangfire.Sample.Repository.EF;
-using Hangfire.Sample.Repository.Identity;
 using log4net;
 using log4net.Config;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
-using System;
-using System.Web;
 
-namespace Hangfire.IO.Sample
+namespace Hangfire.IO.Sample.BusinessLogic.IoC
 {
     /// <summary>
     /// Specifies the Unity configuration for the main container.
@@ -48,25 +43,10 @@ namespace Hangfire.IO.Sample
             XmlConfigurator.Configure();
             var log = LogManager.GetLogger("Application");
             container.RegisterType<ILog>().RegisterInstance(log);
-            log.Info("Application Starting.");
+            log.Info("Console Application Starting.");
 
-            container.RegisterType<ApplicationDbContext>(new PerThreadLifetimeManager());
+            container.RegisterType<ApplicationDbContext>();
             container.RegisterType<IWorker, Worker>();
-
-            SetupIdentityServices(container);
-
-            
-
-
-        }
-        private static void SetupIdentityServices(IUnityContainer container)
-        {
-            container.RegisterType<ApplicationSignInManager>();
-            container.RegisterType<ApplicationUserManager>();
-            container.RegisterType<ApplicationRoleManager>();
-            container.RegisterType<IUserStore<ApplicationUser, Guid>, AppUserStore>(new InjectionConstructor(typeof(ApplicationDbContext)));
-            container.RegisterType<IRoleStore<AppRole, Guid>, AppRoleStore>(new InjectionConstructor(typeof(ApplicationDbContext)));
-            container.RegisterType<IAuthenticationManager>(new PerResolveLifetimeManager(), new InjectionFactory(con => HttpContext.Current.GetOwinContext().Authentication));
         }
     }
 }
