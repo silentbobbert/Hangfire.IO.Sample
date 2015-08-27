@@ -1,7 +1,6 @@
 ﻿using Hangfire.IO.Sample.BusinessLogic.Annotations;
 using Hangfire.IO.Sample.BusinessLogic.Hubs;
 using log4net;
-using log4net.Config;
 using ParallelProcessing.BusinessLogic;
 using System;
 using System.Diagnostics;
